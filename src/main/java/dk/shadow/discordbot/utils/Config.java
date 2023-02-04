@@ -1,4 +1,4 @@
-package dk.sdhadow.discordbot.utils;
+package dk.shadow.discordbot.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
