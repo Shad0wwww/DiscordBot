@@ -1,0 +1,4 @@
+dk\shadow\discordbot\Main.class
+dk\shadow\discordbot\utils\Config.class
+dk\shadow\discordbot\bot\events\ReadyEvent.class
+dk\shadow\discordbot\bot\events\commands\Avatar.class

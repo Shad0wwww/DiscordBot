@@ -1,0 +1,7 @@
+name: DiscordBot
+version: '1.0'
+main: dk.shadow.discordbot.Main
+api-version: 1.8
+authors: [ Shad0wsense ]
+description: none
+website: mcstore.dk
