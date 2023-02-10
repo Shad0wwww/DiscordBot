@@ -16,12 +16,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
 
 public class Main extends JavaPlugin {
 
-    public static Config config;
-    public static FileConfiguration configYML;
+    public static Config config, verify;
+    public static FileConfiguration configYML, verifyYML;
     public static Main instance;
+
+    public HashMap<UUID,String>uuidCodeMap;
+    public HashMap<UUID,String> uuidIdMap;
+    public List<UUID> verifiedmembers;
 
     @Getter
     private JDA discordBot;
@@ -38,8 +47,14 @@ public class Main extends JavaPlugin {
         if (!(new File(getDataFolder(), "config.yml")).exists())
             saveResource("config.yml", false);
 
+        if (!(new File(getDataFolder(), "verify.yml")).exists())
+            saveResource("verify.yml", false);
+
         config = new Config(this, null, "config.yml");
         configYML = config.getConfig();
+
+        verify = new Config(this, null, "verify.yml");
+        verifyYML = verify.getConfig();
 
         String discordToken = config.getConfig().getString("DiscordBot.Token");
 
@@ -53,7 +68,8 @@ public class Main extends JavaPlugin {
                 .addEventListeners(new ReadyEvent())
                 .addEventListeners(new Avatar())
                 .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
-                //.setStatus(OnlineStatus.valueOf(config.getConfig().getString("DiscordBot.Spiller")))
+                //.setStatus(OnlineStatus.valueOf(config.getConfig().getString("DiscordBot.Spiller", "Gaymer")))
+                .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 .build();
 
         // optionally block until JDA is ready
@@ -61,12 +77,19 @@ public class Main extends JavaPlugin {
         Guild guild = discordBot.getGuildById(config.getConfig().getString("DiscordBot.Guild"));
         discordBot.updateCommands().queue();
 
+        uuidCodeMap = new HashMap<>();
+        uuidIdMap = new HashMap<>();
+        verifiedmembers = new ArrayList<>();
 
         if (guild != null) {
             guild.updateCommands()
-                    .addCommands(Commands.slash("avatar", "Få en persons avatar")
-                            .addOption(OptionType.USER, "person", "Hvis avatar vil du have")
-                    );
+                .addCommands(Commands.slash("avatar", "Få en persons avatar").addOption(OptionType.USER, "person", "Hvis avatar vil du have")
+                )
+                .queue();
+
+
+
+
         } else {
             getLogger().severe("Please provide a guild in the config.yml file.");
             return;
