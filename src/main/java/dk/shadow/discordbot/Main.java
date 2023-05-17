@@ -1,7 +1,12 @@
 package dk.shadow.discordbot;
 
+import dk.shadow.discordbot.bot.commands.Avatar;
+import dk.shadow.discordbot.bot.commands.Link;
 import dk.shadow.discordbot.bot.events.ReadyEvent;
-import dk.shadow.discordbot.bot.events.commands.Avatar;
+
+import dk.shadow.discordbot.configuration.ConfigManager;
+import dk.shadow.discordbot.data.PlayerDataManager;
+import dk.shadow.discordbot.server.commands.CommandManager;
 import dk.shadow.discordbot.utils.Config;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -22,15 +27,16 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class Main extends JavaPlugin {
+public final class Main extends JavaPlugin {
 
-    public static Config config, verify;
-    public static FileConfiguration configYML, verifyYML;
+    public static Config config;
+    public static Config verify;
+    public static FileConfiguration configYML;
+    public static FileConfiguration verifyYML;
+    public static ConfigManager configManager;
+    public static PlayerDataManager playerDataManager;
+    @Getter
     public static Main instance;
-
-    public HashMap<UUID,String>uuidCodeMap;
-    public HashMap<UUID,String> uuidIdMap;
-    public List<UUID> verifiedmembers;
 
     @Getter
     private JDA discordBot;
@@ -44,11 +50,9 @@ public class Main extends JavaPlugin {
 
         //CONFIGS -------------------------------
         //Config.yml
-        if (!(new File(getDataFolder(), "config.yml")).exists())
-            saveResource("config.yml", false);
+        if (!(new File(getDataFolder(), "config.yml")).exists())saveResource("config.yml", false);
 
-        if (!(new File(getDataFolder(), "verify.yml")).exists())
-            saveResource("verify.yml", false);
+        if (!(new File(getDataFolder(), "verify.yml")).exists())saveResource("verify.yml", false);
 
         config = new Config(this, null, "config.yml");
         configYML = config.getConfig();
@@ -56,17 +60,24 @@ public class Main extends JavaPlugin {
         verify = new Config(this, null, "verify.yml");
         verifyYML = verify.getConfig();
 
-        String discordToken = config.getConfig().getString("DiscordBot.Token");
+        configManager = new ConfigManager();
+        configManager.loadALl();
+
+        playerDataManager = new PlayerDataManager();
+
+        String discordToken = ConfigManager.get("DiscordBot.Token")[0];
 
         if (discordToken == null) {
             getLogger().severe("Please provide a Token in the config.yml file.");
             return;
         }
 
+        CommandManager.initialise(this);
+
         // Note: It is important to register your ReadyListener before building
         this.discordBot = JDABuilder.createDefault(discordToken)
                 .addEventListeners(new ReadyEvent())
-                .addEventListeners(new Avatar())
+                .addEventListeners(new Avatar(), new Link())
                 .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
                 //.setStatus(OnlineStatus.valueOf(config.getConfig().getString("DiscordBot.Spiller", "Gaymer")))
                 .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES)
@@ -74,16 +85,18 @@ public class Main extends JavaPlugin {
 
         // optionally block until JDA is ready
         discordBot.awaitReady();
-        Guild guild = discordBot.getGuildById(config.getConfig().getString("DiscordBot.Guild"));
+        Guild guild = discordBot.getGuildById(ConfigManager.get("DiscordBot.Guild")[0]);
         discordBot.updateCommands().queue();
 
-        uuidCodeMap = new HashMap<>();
-        uuidIdMap = new HashMap<>();
-        verifiedmembers = new ArrayList<>();
 
         if (guild != null) {
             guild.updateCommands()
-                .addCommands(Commands.slash("avatar", "Få en persons avatar").addOption(OptionType.USER, "person", "Hvis avatar vil du have")
+                .addCommands(Commands.slash("avatar", "Få en persons avatar")
+                        .addOption(OptionType.USER, "person", "Hvis avatar vil du have")
+                )
+
+                .addCommands(Commands.slash("link", "Link command")
+                        .addOption(OptionType.STRING, "kode", "Koden du har fået ingame", true)
                 )
                 .queue();
 
@@ -99,9 +112,14 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         discordBot.shutdownNow();
+        playerDataManager.saveUsers();
+        Main.verify.saveConfig();
     }
 
     public static Main getInstace() {
         return instance;
+    }
+    public static PlayerDataManager getPlayerDataManager() {
+        return playerDataManager;
     }
 }

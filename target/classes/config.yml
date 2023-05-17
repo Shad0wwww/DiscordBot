@@ -1,4 +1,8 @@
 DiscordBot:
-  Token: ODg5ODExNDE5ODQ2MDM3NTE1.G03zdC.K_g_AoJGf_fn--v-mGxv98L1H4IKKcTL9batTc
+  Token: "ODU3OTcwMTU4MTk3ODAwOTgw.GzA0MP.TXPGTaV5qd0_1R62aERHBibZjvbETImwOco-tE"
   Spiller: "Jeg spiller minecraft"
-  Guild: 904820145099255868
+  Guild: 1107768180191015048
+
+messages:
+  verify-message: "&8&l[ &a&LVERIFY &8&L] &fDin kode er &a%kode% &fBrug /link <kode> på discord"
+  verify-med: "&8&l[ &a&LVERIFY &8&L] &a%player% &fverifyed med &a%discord-username%"

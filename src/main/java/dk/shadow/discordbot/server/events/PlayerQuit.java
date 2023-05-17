@@ -11,9 +11,6 @@ public class PlayerQuit implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
 
-        Main.instance.verifiedmembers.remove(event.getPlayer().getUniqueId());
-        Main.instance.uuidCodeMap.remove(event.getPlayer().getUniqueId());
-        Main.instance.uuidIdMap.remove(event.getPlayer().getUniqueId());
 
     }
 

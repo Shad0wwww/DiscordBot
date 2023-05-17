@@ -10,9 +10,7 @@ public class PlayerJoin implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if(Main.verify.getConfig().contains("Data."+event.getPlayer().getUniqueId().toString())){
-            Main.instance.verifiedmembers.add(event.getPlayer().getUniqueId());
-        }
+
     }
 
 
