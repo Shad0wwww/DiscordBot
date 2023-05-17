@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
@@ -17,7 +18,7 @@ public class Link extends ListenerAdapter {
 
     @Override
 
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         Guild guild = event.getGuild();
 
         String kode = event.getOption("kode").getAsString();
@@ -27,6 +28,15 @@ public class Link extends ListenerAdapter {
                     event.getMember().getUser().getAsTag(),
                     event.getMember().getUser().getId()
             );
+
+            assert guild != null;
+            if (guild.equals(ConfigManager.get("verify.verify-channel")[0])) {
+                EmbedBuilder error = new EmbedBuilder();
+                error.setColor(Color.RED);
+                error.setDescription("Du skal være i verify #"+ ConfigManager.get("verify.verify-channel")[0]);
+                event.replyEmbeds(error.build()).queue();
+                return; // Return early to avoid further processing
+            }
 
             if (playerData == null) {
                 EmbedBuilder error = new EmbedBuilder();
@@ -46,11 +56,13 @@ public class Link extends ListenerAdapter {
                 e.fillInStackTrace();
             }
 
-
+            //VERIFY EMBED
             EmbedBuilder verify = new EmbedBuilder();
             verify.setColor(Color.GREEN);
             verify.setDescription("Du har nu verifyed med " + playerData.getUserName());
             event.replyEmbeds(verify.build()).queue();
+
+
 
             Player player = Bukkit.getPlayer(playerData.getUuid());
             try {
@@ -58,6 +70,9 @@ public class Link extends ListenerAdapter {
             } catch (Exception e) {
                 e.fillInStackTrace();
             }
+
+
+
         }
     }
 

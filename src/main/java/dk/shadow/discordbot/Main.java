@@ -91,18 +91,8 @@ public final class Main extends JavaPlugin {
 
         if (guild != null) {
             guild.updateCommands()
-                .addCommands(Commands.slash("avatar", "Få en persons avatar")
-                        .addOption(OptionType.USER, "person", "Hvis avatar vil du have")
-                )
-
-                .addCommands(Commands.slash("link", "Link command")
-                        .addOption(OptionType.STRING, "kode", "Koden du har fået ingame", true)
-                )
-                .queue();
-
-
-
-
+                .addCommands(Commands.slash("avatar", "Få en persons avatar").addOption(OptionType.USER, "person", "Hvis avatar vil du have"))
+                .addCommands(Commands.slash("link", "Link command").addOption(OptionType.STRING, "kode", "Koden du har fået ingame", true)).queue();
         } else {
             getLogger().severe("Please provide a guild in the config.yml file.");
             return;
