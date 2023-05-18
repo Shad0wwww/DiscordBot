@@ -3,8 +3,10 @@ version: '${project.version}'
 main: dk.shadow.discordbot.Main
 api-version: 1.8
 authors: [ Shad0wsense ]
-description: none
+description: "A discord bot"
 website: mcstore.dk
 commands:
   verify:
-    description: "Hej"
+    description: "The verify command"
+    aliases:
+      - link

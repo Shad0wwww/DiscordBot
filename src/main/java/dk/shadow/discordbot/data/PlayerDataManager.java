@@ -48,10 +48,10 @@ public class PlayerDataManager {
     }
 
     //IF THE PLAYER IS VERIFIED FUNCTION
-    public Boolean isVerified(UUID uuid) {
-        if (playerDataMap.containsKey(uuid)) {
-            String discordId = this.playerDataMap.get(uuid).getDiscordId();
-            return discordId != null;
+    public Boolean isVerified(String discordId) {
+        if (playerDataMap.containsKey(discordId)) {
+            String Id = this.playerDataMap.get(discordId).getDiscordId();
+            return Id != null;
         }
         return false;
     }

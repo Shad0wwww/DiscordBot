@@ -7,6 +7,7 @@ import dk.shadow.discordbot.bot.events.ReadyEvent;
 import dk.shadow.discordbot.configuration.ConfigManager;
 import dk.shadow.discordbot.data.PlayerDataManager;
 import dk.shadow.discordbot.server.commands.CommandManager;
+import dk.shadow.discordbot.server.events.Instalize;
 import dk.shadow.discordbot.utils.Config;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -73,6 +74,7 @@ public final class Main extends JavaPlugin {
         }
 
         CommandManager.initialise(this);
+        Instalize.event(this);
 
         // Note: It is important to register your ReadyListener before building
         this.discordBot = JDABuilder.createDefault(discordToken)

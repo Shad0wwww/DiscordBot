@@ -1,16 +1,17 @@
 DiscordBot:
-  Token: "ODU3OTcwMTU4MTk3ODAwOTgw.GuV-0S.Vae4p1kwn4xCyY4FOXFLtwVXylOZcquy4XvYh8"
+  Token: ""
   Spiller: "Jeg spiller minecraft"
   Guild: 1107768180191015048
 
 verify:
-  #VERIFY
-  verify-channel:
-  verify-role-id:
-  verify-logs:
+  verify-channel: "1108808493537964154"
+  verify-role-id: "1108809753733365760"
 
-
+logs:
+  verify-logs-channel: "1108808765026877450"
+  ingame-chat-logs-channel: "1108808908228808764"
 
 messages:
   verify-message: "&8&l[ &a&LVERIFY &8&L] &fDin kode er &a%kode% &fBrug /link <kode> på discord"
   verify-med: "&8&l[ &a&LVERIFY &8&L] &a%player% &fverifyed med &a%discord-username%"
+  ingame-logs-message: "%player%: %message%"
